@@ -16,7 +16,7 @@ namespace WebApi.Controllers
             return Ok("Added");
             
         }
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("getbyid")]
         public Brand Get(int id)
         {
