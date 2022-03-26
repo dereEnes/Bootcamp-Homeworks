@@ -1,5 +1,7 @@
 ﻿using First.App.Business.Abstract;
 using First.App.Business.DTOs;
+using First.App.DataAccess.EntityFramework.Repository.Abstracts;
+using First.App.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,10 +16,11 @@ namespace First.App.Business.Concretes
     public class JwtService : IJwtService
     {
         private readonly IConfiguration configuration;
-
-        public JwtService(IConfiguration configuration)
+        private readonly IUserService _userService;
+        public JwtService(IConfiguration configuration, IUserService userService)
         {
             this.configuration=configuration;
+            _userService = userService;
         }
 
         /// <summary>

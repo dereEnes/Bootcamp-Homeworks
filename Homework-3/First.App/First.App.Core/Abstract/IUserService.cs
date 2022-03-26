@@ -8,10 +8,10 @@ namespace First.App.Business.Abstract
 {
     public interface IUserService
     {
-        User GetCompany(Expression<Func<User, bool>> filter);
-        List<User> GetAllCompany();
-        void AddCompany(User company);
-        void UpdateCompany(User company);
-        void DeleteCompany(User company);
+        User GetUser(Expression<Func<User, bool>> filter);
+        List<User> GetAllUsers();
+        void AddUser(User user);
+        void UpdateUser(User user);
+        void DeleteUser(User user);
     }
 }
