@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -11,9 +12,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Extensions;
+using WebApi.Middlewares;
 using WebApi.Models;
 using WebApi.SwaggerOperationFilters;
 
@@ -54,7 +57,31 @@ namespace WebApi
                 
             }
 
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hi");
+            //});
+            //app.Map("/brands/getall", (appBuilder) =>
+            //{
+            //    appBuilder.Run(async (context) => {
+            //        Console.WriteLine(context.Request.Method.ToString());
+            //        Debug.WriteLine("/example middleware tetiklendi.");
+            //        await  context.Response.WriteAsync("Hi");
+            //    });
+            //});
+            //app.MapWhen(x => x.Request.Method == "GET", internalApp =>
+            //{
+            //    internalApp.Run(async context => {
+            //        Console.WriteLine(context.Request.Method.ToString());
+            //        await context.Response.WriteAsync("MapWhen Middleware");
+                    
+            //    }); 
+            //});
+
             app.UseHttpsRedirection();
+
+            app.UseLoggingMiddleware();
+
             //Custom middleware for app-version check
             app.UseVersionCheck( Options.Create(new AppVersion { Version = Configuration.GetValue<string>("AppVersion") }));
 
