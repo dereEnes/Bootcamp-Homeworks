@@ -26,15 +26,16 @@ namespace First.App.Business.Concretes
         /// <summary>
         /// Users Repositoryi yazıp bu dataları veritabanından da çekebilirsiniz.
         /// </summary>
-        Dictionary<string, string> users = new Dictionary<string, string>
-        {
-            { "user1","password1"},
-            { "user2","password2"},
-            { "user3","password3"},
-        };
+        //Dictionary<string, string> users = new Dictionary<string, string>
+        //{
+        //    { "user1","password1"},
+        //    { "user2","password2"},
+        //    { "user3","password3"},
+        //};
         public TokenDto Authenticate(UserDto user)
         {
-            if (!users.Any(x => x.Key == user.Name && x.Value == user.Password))
+            var users = _userService.GetAllUsers();
+            if (!users.Any(x => x.FirstName == user.Name && x.Password == user.Password))
             {
                 return null;
             }

@@ -54,7 +54,7 @@ namespace First.API
                 };
             });
 
-            services.AddSingleton<IJwtService, JwtService>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "First.API", Version = "v1" });
@@ -86,6 +86,8 @@ namespace First.API
                     }
                 });
             });
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddControllersWithViews();
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 

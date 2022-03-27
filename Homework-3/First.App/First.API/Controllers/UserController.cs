@@ -13,10 +13,12 @@ namespace First.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IJwtService jwtService;
+        private readonly IUserService _userService;
 
-        public UserController(IJwtService jwtService)
+        public UserController(IJwtService jwtService, IUserService userService)
         {
-            this.jwtService=jwtService;
+            this.jwtService = jwtService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -48,5 +50,6 @@ namespace First.API.Controllers
 
             return Ok(token);
         }
+        
     }
 }

@@ -8,6 +8,7 @@ namespace First.App.Domain.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Password { get; set; }
         public string City { get; set; }
         public string District { get; set; }
         public DateTime DateOfBorn { get; set; }
