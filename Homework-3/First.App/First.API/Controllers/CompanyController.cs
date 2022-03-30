@@ -98,9 +98,19 @@ namespace First.API.Controllers
         /// <returns></returns>
         [Route("AddCompany")]
         [HttpPost]
-        public IActionResult Post([FromBody] CompanyDto model)
+        public IActionResult Post([FromBody] CreateCompanyModel model)
         {
-            companyService.AddCompany(ConvertCompanyDtoToCompany(model));
+            //derste bu alanı required yaptık diye ekledim yoksa fluent validation ile her alanı kontrol edip o hatalar dönülmeli 
+            // tek tek böyle bakmak doğru olmaz.
+            if (model.Name is null)
+            {
+                return BadRequest(
+                    new CompanyResponse { 
+                        Error = "İsim alanı boş geçilemez",
+                        Success = false
+                    });
+            }
+            companyService.AddCompany(ConvertCreateCompanyModelToCompany(model));
             return Ok(
                 new CompanyResponse
                 {
@@ -111,23 +121,39 @@ namespace First.API.Controllers
 
         [Route("update")]
         [HttpPut]
-        public IActionResult Update([FromBody] CompanyDto model,[FromQuery] int companyId)
+        public IActionResult Update([FromBody] UpdateCompanyModel model)
         {
-            if (CheckCompanyExist(companyId))
+            if (CheckCompanyExist(model.Id))
             {
-                companyService.UpdateCompany(ConvertCompanyDtoToCompany(model));
+                companyService.UpdateCompany(ConvertCompanyUpdateModelToCompany(model));
                 return Ok(
                     new CompanyResponse
                     {
-                        Data = "İşleminiz Başarıyla Tamamlandı",
+                        Data = "Şirket güncellendi.",
                         Success = true
                     });
             }
             return BadRequest(new CompanyResponse
             {
-                Data = $"{companyId} Id li bir şirket bulunamadı!",
+                Data = $"{model.Id} Id li bir şirket bulunamadı!",
                 Success = false
             });
+        }
+        [NonAction]
+        public Company ConvertCreateCompanyModelToCompany(CreateCompanyModel model)
+        {
+            return new Company
+            {
+                Address = model.Address,
+                City = model.City,
+                Country = model.Country,
+                CreatedBy = "Samet",
+                CreatedAt = System.DateTime.Now,
+                Description = model.Description,
+                Location = model.Location,
+                Name = model.Name,
+                Phone = model.Phone
+            };
         }
         [NonAction]
         public bool CheckCompanyExist(int id)
@@ -140,20 +166,22 @@ namespace First.API.Controllers
             return true;
         }
         [NonAction]
-        public Company ConvertCompanyDtoToCompany(CompanyDto model)
+        public Company ConvertCompanyUpdateModelToCompany(UpdateCompanyModel model)
         {
+            Company company = companyService.GetCompany(c => c.Id == model.Id);
             return (new Company
             {
-                Address = model.Address,
-                City = model.City,
-                Description = model.Description,
-                CreatedBy = "SAMET",
-                CreatedAt = System.DateTime.Now,
-                IsDeleted = false,
-                Name = model.Name.ToUpper(),
-                Country = model.Country,
-                Phone = model.Phone,
-                Location = model.Location,
+
+                Address = model.Address == default ? company.Address : model.Address,
+                City = model.City == default ? company.City : model.City,
+                Description = model.Description == default ? company.City : model.City,
+                CreatedBy = company.CreatedBy,
+                CreatedAt = company.CreatedAt,
+                IsDeleted = company.IsDeleted,
+                Name = model.Name.ToUpper() == default ? company.Name : model.Name,
+                Country = model.Country == default ? company.Country : model.Country,
+                Phone = model.Phone == default ? company.Phone : model.Phone,
+                Location = model.Location == default ? company.Location : model.Location,
             });
         }
         

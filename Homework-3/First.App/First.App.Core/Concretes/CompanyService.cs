@@ -43,6 +43,7 @@ namespace First.App.Business.Concretes
 
         public void UpdateCompany(Company company)
         {
+            Company entity = repository.Get()
             repository.Update(company);
             unitOfWork.Commit();
         }
